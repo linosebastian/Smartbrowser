@@ -1,3 +1,5 @@
+#begin
+
 import gtk,webkit
 import pygtk
 import tkMessageBox as m
