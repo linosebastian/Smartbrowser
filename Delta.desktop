@@ -1,0 +1,15 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Delta
+GenericName=browser
+Comment=Sophisticated web browser for browsing
+Exec=smartbrowser
+Terminal=false
+MimeType=text/html;
+Categories=internet;
+StartupNotify=true
+Actions=Window;Document;
+Name[en_IN]=Delta.desktop
