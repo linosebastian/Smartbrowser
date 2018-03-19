@@ -54,7 +54,7 @@ class Doge():
         self.file.connect("clicked",self.loadfile)
         self.video.connect("clicked",self.loadvideo)
         self.sync.connect("clicked",self.syncing)
-	#self.account.connect("clicked",self.accountinfo)
+	self.account.connect("clicked",self.accountinfo)
 	
         self.so_navigation.pack_start(self.many_back, False)
         self.so_navigation.pack_start(self.such_forward, False)
@@ -65,7 +65,7 @@ class Doge():
        	self.so_navigation.pack_start(self.file,False)
         self.so_navigation.pack_start(self.video,False)
 	self.so_navigation.pack_start(self.sync,False)
-	#self.so_navigation.pack_start(self.account,False)
+	self.so_navigation.pack_start(self.account,False)
 	self.so_navigation.pack_start(self.wow_address_bar)
 	self.so_navigation.pack_start(self.log,False)
         # Create view for webpage

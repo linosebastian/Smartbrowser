@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>User Home</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'js/jquery.dataTables.min.css' %}" rel="stylesheet" type="text/css">
+
+
+    <!-- Custom CSS -->
+    <style>
+    body {
+        padding-top: 70px;
+        /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    }
+    #na{
+       margin: -33px -33px 10px;
+    }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li >
+                        <a href="{% url 'gohome' %}">Go Home</a>
+                    </li>
+                </ul>
+            </div>
+             <p id="na" style="color: white;float: right;">Welcome {{ user }}</p>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+<!--File upload-->
+    <!-- Page Content -->
+    <div class="container">
+    <br>
+        <div class="row">
+        <br><br><br><br>
+        <table id="mytable">
+            <thead>
+            <tr>
+            <th>File Names</th>
+            <th>Download</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for i,j in data %}
+                    <tr>
+                    <td>{{ i }}</td>
+                        <td>
+                    <form action="{% url 'download' %}" method="post">{% csrf_token %}
+                    <input type="hidden" name="pk" value="{{ j }}">
+                    <input type="hidden" name="na" value="{{ i }}">
+                    <input type="submit" value="Download">
+                        </form>
+                    </td>
+                    </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container -->
+    <!-- jQuery Version 1.11.1 -->
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $("#mytable").DataTable();
+        });
+    </script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+</body>
+</html>

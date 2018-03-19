@@ -1,0 +1,101 @@
+from __future__ import unicode_literals
+from django.shortcuts import render
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import redirect
+from models import *
+import tkMessageBox as m
+import Tkinter
+import easygui
+from backblazeb2 import BackBlazeB2
+import random as r
+from encry import  *
+from decry import *
+import os,subprocess
+import json
+
+# Create your views here.
+def home(requests):
+    os.system("b2 authorize-account 4f42d08b88de 000aabc88b8fbdc97d0552a6ed8b34c55a338f8444")
+    return render(requests,"index.html",{})
+def registration(requests):
+    key=''
+    for i in range(0,16):
+        key=key+str(r.randrange(0,9))
+    ob=Registration(name=requests.POST.get('na'),email=requests.POST.get('em'),phonenumber=requests.POST.get('num'),username=requests.POST.get('us'),password=requests.POST.get('pa'),key=key)
+    ob.save()
+    #creating files
+    path="Registrationapp/static/files/"
+    f=open("userdetails.txt",'w+')
+    f.write("name= "+ob.name)
+    f.write("\nemail= "+ob.email)
+    f.write("\nphone number= "+ob.phonenumber)
+    f.write("\nUser name= "+ob.username)
+    f.write("\nPassword= " +ob.password)
+    f.close()
+    
+    for i in range(0,16):
+        key=key+str(r.randrange(0,9))
+    encrypt_file(key,"userdetails.txt","userdetails.txt")
+    #uploading to the cloud
+    try:
+        b2 = BackBlazeB2("4f42d08b88de", "000aabc88b8fbdc97d0552a6ed8b34c55a338f8444")
+        response = b2.create_bucket(str(ob.username), bucket_type='allPrivate')
+        b2.upload_file(str('userdetails.txt'), bucket_name=str(ob.username))
+	easygui.msgbox("User Successfully Registered!", title="Success")
+    except Exception,e:
+	easygui.msgbox("Registeration Unsuccessfull!", title="Error")        
+	print "Error Occured \n Possible reasons are \n1.Invalid authentication \n2.Network Problem"
+        print e
+    return render(requests,"index.html",{})
+def login(requests):
+    user=requests.POST.get('usn')
+    ob=Registration.objects.get(username=user)
+    passw=requests.POST.get('pas')
+    a = subprocess.Popen("b2 list-file-names " + user, shell=True, stdout=subprocess.PIPE)
+    o, u = a.communicate()
+    data = json.loads(o)
+    xd=""
+    for i in range(len(data['files'])):
+        if data['files'][i]["fileName"]=="userdetails.txt":
+            os.system("b2 download-file-by-id " + data['files'][i]["fileId"] + " " + data['files'][i]["fileName"] + "")
+            decrypt_file(ob.key,"userdetails.txt","userdetails.txt")
+            f=open("userdetails.txt","r")
+            #print f.read()
+	    #print filecontent
+	    xd=f.read().split("\n")[4].split("=")[1]
+	    print xd
+    try:
+        ob=Registration.objects.get(username=user,password=xd)
+        # a=os.system("b2 list-file-names amalamal")
+        requests.session["sess"]=ob.username
+	easygui.msgbox("User Login Successfull", title="Success")
+        return render(requests,"main.html",{"user":requests.session["sess"]})
+
+    except Exception,e:
+	easygui.msgbox("Login Unsuccessfull!", title="Error")
+        print e,e.message
+        return render(requests,'main.html',{})
+def gohome(request):
+    return redirect("https://google.com")
+def download(request):
+    x=request.POST.get("pk")
+    y=request.POST.get("na")
+    y=y.split("/")[-1]
+    os.system("b2 download-file-by-id "+x+" "+y+"")
+    with open(y, 'rb') as fh:
+        response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
+        response['Content-Disposition'] = 'inline; filename=' + y
+        print "success"
+        return response
+def data(request):
+    a = subprocess.Popen("b2 list-file-names " + request.session["sess"], shell=True, stdout=subprocess.PIPE)
+    o, u = a.communicate()
+    data = json.loads(o)
+    f = []
+    li = []
+    for i in range(len(data['files'])):
+        f.append(data['files'][i]["fileName"])
+        li.append(data['files'][i]["fileId"])
+    return render(request, "home.html", {'user': request.session["sess"], "data": zip(f, li)})
+def main(requests):
+    return render(requests,"main.html")

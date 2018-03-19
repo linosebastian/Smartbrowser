@@ -8,6 +8,7 @@ GenericName=browser
 Comment=Sophisticated web browser for browsing
 Exec=smartbrowser
 Terminal=false
+Icon=/opt/smartbrowser/Untitled.png
 MimeType=text/html;
 Categories=internet;
 StartupNotify=true
