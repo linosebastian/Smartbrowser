@@ -79,6 +79,7 @@ def download(request):
         return response
 def data(request):
 	if request.session !=None or request.session != "":
+		print "hello"
 		a = subprocess.Popen("b2 list-file-names " + request.session["sess"], shell=True, stdout=subprocess.PIPE)
 		o, u = a.communicate()
 		data = json.loads(o)
@@ -102,11 +103,13 @@ def sync(requests):
         b2 = BackBlazeB2("4f42d08b88de","000aabc88b8fbdc97d0552a6ed8b34c55a338f8444")
         print 1
         b2.upload_file(i, bucket_name=str(requests.session["sess"]))
+	easygui.msgbox("Successfully Uploaded", title="Success")
         print "success"
      except Exception,e:
         print e    
     return data(requests)
 def logout(requests):
-    del request.session["sess"]
-    easygui.msgbox("Logout Successfull", title="Success")
-    return render(request, "main.html", {})
+   for key in requests.session.keys():
+	del requests.session["sess"]
+	easygui.msgbox("Logout Successfull", title="Success")
+   return render(requests,"main.html")

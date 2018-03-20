@@ -78,7 +78,11 @@ def download(request):
         print "success"
         return response
 def data(request):
+	if "sess" not in request.session:
+		easygui.msgbox("Kindly login", title="Error")
+		return render(request, "main.html", {})	
 	if request.session !=None or request.session != "":
+		print "hello"
 		a = subprocess.Popen("b2 list-file-names " + request.session["sess"], shell=True, stdout=subprocess.PIPE)
 		o, u = a.communicate()
 		data = json.loads(o)
@@ -108,6 +112,7 @@ def sync(requests):
         print e    
     return data(requests)
 def logout(requests):
-    del request.session["sess"]
-    easygui.msgbox("Logout Successfull", title="Success")
-    return render(request, "main.html", {})
+   for key in requests.session.keys():
+	del requests.session["sess"]
+	easygui.msgbox("Logout Successfull", title="Success")
+   return render(requests,"main.html")

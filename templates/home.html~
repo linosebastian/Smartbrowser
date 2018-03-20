@@ -45,7 +45,7 @@
 		<br>
             </div>
              <p id="na" style="color: white;float: right;">Welcome {{ user }}</p>
-		<form action={% url 'logout' %} method="post">{% csrf_token %}
+		<form action="{% url 'logout' %}" method="post">{% csrf_token %}
 		<input type="submit" class="button button-primary cta"style="border-radius: 25px;"value="Logout">
 		</form>		
 	
@@ -57,7 +57,7 @@
     <!-- Page Content -->
     <div class="container">
 				<br>
-				<form action={% url 'sync' %} method="post">{% csrf_token %}
+				<form action="{% url 'sync' %}" method="post">{% csrf_token %}
 				<input type="submit" class="button button-primary cta"style="border-radius: 25px;"value="Sync your files">
 					</form>
 

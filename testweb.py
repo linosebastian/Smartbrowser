@@ -128,7 +128,7 @@ class Doge():
 
     	def torstart(self,widget):
          	m.showinfo("Warning","Tor Starting")
-         	os.system("sudo systemctl start tor.service")
+         	os.system("gksu archtorify --start")
          	with Controller.from_port(port = 9051) as controller:
 	    		controller.authenticate(password='')
 	    		print("Success!")
@@ -137,7 +137,7 @@ class Doge():
 
     	def torstop(self,widget):
 		m.showinfo("Warining","Tor Stoping")
-        	os.system("sudo systemctl stop tor.service")
+        	os.system("gksu archtorify --stop")
 
     	def loadfile(self,widget):
        		path=tkFileDialog.askopenfilename()
