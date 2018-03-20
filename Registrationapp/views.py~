@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+##from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect
@@ -54,18 +54,8 @@ def login(requests):
     a = subprocess.Popen("b2 list-file-names " + user, shell=True, stdout=subprocess.PIPE)
     o, u = a.communicate()
     data = json.loads(o)
-    xd=""
-    for i in range(len(data['files'])):
-        if data['files'][i]["fileName"]=="userdetails.txt":
-            os.system("b2 download-file-by-id " + data['files'][i]["fileId"] + " " + data['files'][i]["fileName"] + "")
-            decrypt_file(ob.key,"userdetails.txt","userdetails.txt")
-            f=open("userdetails.txt","r")
-            #print f.read()
-	    #print filecontent
-	    xd=f.read().split("\n")[4].split("=")[1]
-	    print xd
     try:
-        ob=Registration.objects.get(username=user,password=xd)
+        ob=Registration.objects.get(username=user,password=passw)
         # a=os.system("b2 list-file-names amalamal")
         requests.session["sess"]=ob.username
 	easygui.msgbox("User Login Successfull", title="Success")
@@ -88,14 +78,35 @@ def download(request):
         print "success"
         return response
 def data(request):
-    a = subprocess.Popen("b2 list-file-names " + request.session["sess"], shell=True, stdout=subprocess.PIPE)
-    o, u = a.communicate()
-    data = json.loads(o)
-    f = []
-    li = []
-    for i in range(len(data['files'])):
-        f.append(data['files'][i]["fileName"])
-        li.append(data['files'][i]["fileId"])
-    return render(request, "home.html", {'user': request.session["sess"], "data": zip(f, li)})
+	if request.session !=None or request.session != "":
+		a = subprocess.Popen("b2 list-file-names " + request.session["sess"], shell=True, stdout=subprocess.PIPE)
+		o, u = a.communicate()
+		data = json.loads(o)
+		f = []
+		li = []
+		for i in range(len(data['files'])):
+			f.append(data['files'][i]["fileName"])
+			li.append(data['files'][i]["fileId"])
+		return render(request, "home.html", {'user': request.session["sess"], "data": zip(f, li)})
+	else:
+       		return render(request, "main.html", {})
 def main(requests):
     return render(requests,"main.html")
+def sync(requests):
+    s=os.listdir("temp")
+    f=[]
+    for i in s:
+       f.append("temp/"+i)
+    for i in f:
+     try:
+        b2 = BackBlazeB2("4f42d08b88de","000aabc88b8fbdc97d0552a6ed8b34c55a338f8444")
+        print 1
+        b2.upload_file(i, bucket_name=str(requests.session["sess"]))
+        print "success"
+     except Exception,e:
+        print e    
+    return data(requests)
+def logout(requests):
+    del request.session["sess"]
+    easygui.msgbox("Logout Successfull", title="Success")
+    return render(request, "main.html", {})

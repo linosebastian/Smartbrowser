@@ -50,10 +50,10 @@
 	   	<nav id="header-nav-wrap">
 			<ul class="header-main-nav">
 				<li class="current"><a class="smoothscroll"  href="#home" title="home">Home</a></li>
-             
+                <li><a class="smoothscroll"  href="#" title="about">Account Info</a></li>
 				
 			</ul>
-		<a href="{% url 'data' %}" title="sign-up" class="button button-primary cta">Account Info</a>
+
             <a href="{% url 'home' %}" title="sign-up" class="button button-primary cta">Sign Up/Sign In</a>
 		</nav>
 
@@ -76,8 +76,8 @@
 
                     <h1 data-aos="fade-up">
                         Innovative Platform <br>
-                        Innovative Ideas<br>
-                        Feel  the  Best.
+                        Where you find<br>
+                        What  you need.
                     </h1>
 
                                                           

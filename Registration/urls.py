@@ -26,5 +26,7 @@ urlpatterns = [
      url(r'^gohome',gohome,name='gohome'),
      url(r'^download',download,name='download'),
      url(r'^data',data,name='data'),
+     url(r'^sync',sync,name='sync'),
+     url(r'^logout',logout,name='logout'),
 
 ]
